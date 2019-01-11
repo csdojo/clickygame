@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import FriendCard from "./components/FriendCard";
 import Nav from "./components/Nav";
+import Title from "./components/Title";
 import friends from "./friends.json";
 import './App.css';
+import { underline } from "ansi-colors";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
 
+
+
+  }
   state = {
     friends,
     message: "Click an image to begin!",
@@ -25,8 +32,15 @@ class App extends Component {
   selectFriend = name => {
     const findFriend = this.state.unselectedFriends.find(item => item.name === name);
 
+   
+    console.log(this.state.unselectedFriends);
+    console.log(findFriend);
+
+
     if (findFriend === undefined) {
-      // failure to select a new friend
+
+      // what you pick is not in the unselectedFriend array, game ends.
+      //  console.log(findFriend)
       this.setState({
         message: "You guessed incorrectly!",
         topScore: (this.state.curScore > this.state.topScore) ? this.state.curScore : this.state.topScore,
@@ -34,10 +48,11 @@ class App extends Component {
         friends: friends,
         unselectedFriends: friends
       });
+
     }
     else {
-      // success to select a new friend
-      const newFriends = this.state.unselectedFriends.filter(item => item.name !== name);
+      // what you pick is in the unseletedFriday array, game continues.
+      const newFriends = this.state.friends.filter(item => item.name !== name);
 
       this.setState({
         message: "You guessed correctly!",
@@ -45,9 +60,11 @@ class App extends Component {
         friends: friends,
         unselectedFriends: newFriends
       });
+
     }
 
     this.shuffleArray(friends);
+
   };
 
 
@@ -60,26 +77,13 @@ class App extends Component {
           curScore={this.state.curScore}
           topScore={this.state.topScore}
         />
-        <div className="box">
-          <div className="container">
-            <div className="jumbotron jumbotron-fluid brother">
-
-
-            </div>
-          </div>
-          <div className="content">
-            <div className="desp">
-              <h1 className="display-4 ">Clicky Game</h1>
-              <p className="lead ">Click on image to earn points, but don't click on any more than once!</p>
-            </div>
-          </div>
-        </div>
+        <Title />
         <div className="container bodyC">
 
 
           {
             this.state.friends.map(friend => (
-              <FriendCard
+              <FriendCard key={friend.id}
                 name={friend.name}
                 image={friend.image}
                 selectFriend={this.selectFriend}
